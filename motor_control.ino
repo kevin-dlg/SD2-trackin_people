@@ -7,6 +7,12 @@ char appData;
 String inData = "";
 int pos = 90;
 
+//Variables for motor speed control
+bool In1;
+bool In2;  //pins to the motor driver
+int pulsePin = 3; //pin that will output PWM signal
+int dutyCycle;
+
 void setup() {
   // put your setup code here, to run once:
   guide.attach(9);
