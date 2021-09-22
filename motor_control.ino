@@ -72,6 +72,11 @@ void loop() {
     pos = pos + 5;
     guide.write(pos);
     delay(500);
+    digitalWrite(dir1,HIGH);
+    digitalWrite(dir2,LOW);
+    setSpeed(95);
+    delay(100);
+    setSpeed(100);
     }
     else{
       Serial.println("out of bounds");
@@ -85,6 +90,11 @@ void loop() {
       pos = pos - 5;
       guide.write(pos);
       delay(500);
+      digitalWrite(dir1,HIGH);
+      digitalWrite(dir2,LOW);
+      setSpeed(95);
+      delay(100);
+      setSpeed(100);
     }
     else
     {
