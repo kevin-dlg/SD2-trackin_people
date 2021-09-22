@@ -62,8 +62,9 @@ void loop() {
   else if ( inData == "S") 
   {
     Serial.println("Moving Back");
-    digitalWrite(dir1,LOW);
-    digitalWrite(dir2,HIGH);
+    //input motor control code here 
+    digitalWrite(dir1, LOW);
+    digitalWrite(dir2, HIGH);
   }
   else if ( inData == "D") 
   {
