@@ -40,10 +40,12 @@ void loop() {
   if ( inData == "W") 
   {
     Serial.println("Moving Forward");
+    //input motor control code here
   }
   else if ( inData == "S") 
   {
     Serial.println("Moving Back");
+    //input motor control code here 
   }
   else if ( inData == "D") 
   {
