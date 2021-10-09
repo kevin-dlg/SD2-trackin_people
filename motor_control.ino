@@ -6,7 +6,6 @@ SoftwareSerial HM10(2, 3); // RX = 2, TX = 3
 Servo guide;
 char appData;  
 String inData = "";
-int pos = 90;
 
 //Variables for motor speed control
 /*In1=1 & In2=0 : motor moves forward
@@ -15,8 +14,11 @@ int pos = 90;
  */
 int dir1=4;
 int dir2=5;
+int dir3=6;
+int dir4=7;
 int motorSpeed=0;
-int speedPin = 3; //pin that will output PWM signal
+int speedPin1 = 3; //pin that will output PWM signal
+int speedPin2 = 8;
 //converts speed percentage to duty cycle that can be used by PWM pin
 void setMotorSpeed( int localSpeed){
   int dutyCycle;
@@ -27,10 +29,14 @@ void setMotorSpeed( int localSpeed){
 void setup() {
   // put your setup code here, to run once:
   pinMode(dir1,OUTPUT);
-  pinMode(dir2, OUTPUT);
+  pinMode(dir2,OUTPUT);
+  pinmode(dir3,OUTPUT);
+  pinmode(dir4,OUTPUT);
   pinMode(speedPin,OUTPUT);
   digitalWrite(dir1, LOW);
   digitalWrite(dir2, LOW);  //initializing DC motor. It is not moving until a key is pressed
+  digitalWrite(dir3, LOW); 
+  digitalWrite(dir4, LOW);
   
   guide.attach(9);
   guide.write(pos);
@@ -59,6 +65,8 @@ void loop() {
     Serial.println("Moving Forward");
     digitalWrite(dir1,HIGH);
     digitalWrite(dir2,LOW);
+    digitalWrite(dir3,HIGH);
+    digitalWrite(dir4,LOW);
   }
   else if ( inData == "S") 
   {
@@ -66,45 +74,33 @@ void loop() {
     //input motor control code here 
     digitalWrite(dir1, LOW);
     digitalWrite(dir2, HIGH);
+    digitalWrite(dir3,LOW);
+    digitalWrite(dir4,HIGH);
   }
   else if ( inData == "D") 
   {
     Serial.println("Moving Left");
-    if(pos > 0 && pos < 180){  
-    pos = pos + 5;
-    guide.write(pos);
-    delay(500);
-    digitalWrite(dir1,HIGH);
-    digitalWrite(dir2,LOW);
-    setMotorSpeed(95);
-    delay(100);
-    setMotorSpeed(100);
+    digitalWrite(dir1, LOW);
+    digitalWrite(dir2, LOW);
+    digitalWrite(dir3,HIGH);
+    digitalWrite(dir4,LOW);
     }
-    else{
-      Serial.println("out of bounds");
-    }
-  }
-  else if ( inData == "A") 
+   else if ( inData == "A") 
   {
-    Serial.println("Moving Right");
-    if(pos > 0 && pos < 180)
-    {  
-      pos = pos - 5;
-      guide.write(pos);
-      delay(500);
-      digitalWrite(dir1,HIGH);
-      digitalWrite(dir2,LOW);
-      setMotorSpeed(95);
-      delay(100);
-      setMotorSpeed(100);
+    Serial.println("Moving Left");
+    digitalWrite(dir1, HIGH);
+    digitalWrite(dir2, LOW);
+    digitalWrite(dir3,LOW);
+    digitalWrite(dir4,LOW);
     }
-    else
-    {
-      Serial.println("out of bounds");
+    else if ( inData == "R") 
+  {
+    Serial.println("STOP");
+    digitalWrite(dir1, LOW);
+    digitalWrite(dir2, LOW);
+    digitalWrite(dir3,LOW);
+    digitalWrite(dir4,LOW);
     }
   }
-    else
-    {
-      Serial.println("cammand not accepted");
-    }
+
   }
