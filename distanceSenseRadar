@@ -1,0 +1,57 @@
+/*
+ * This is a program to calculate the distance between a detected object and the
+ * Human Radar sensor
+ */
+ #include <SoftwareSerial.h>
+ #include <DFRobot_mmWave_Radar.h>
+ 
+SoftwareSerial mySerial(3,2); //RX=3, TX=2
+DFRobot_mmWave_Radar sensor(&mySerial);
+
+
+int ledPin=13;               //LED that will indicate if a person was detected 
+unsigned int range=9;        //range that the sensor will detect in meters
+float distance=range; //distance of the detected target from the sensor
+
+void setup()
+{
+  Serial.begin(115200);
+  mySerial.begin(115200);
+  pinMode(ledPin, OUTPUT);
+
+  sensor.factoryReset();        //Resets sensor to factory settings
+  //defines sensing area distance up to 4 segments at a time in meters
+  sensor.DetRangeCfg(0, range); 
+  //sensor.OutputLatency(x,y) determined the output delay time when target is detected (x), and
+  //delay time when target disappears (y). Unit is in seconds
+  //DO NOT SET PARAMETERS AS 0,0. WILL NOT WORK   
+  sensor.OutputLatency(.5,0);
+}
+
+/*  Once a target is detected, the range of the sensor will be reduced until the target is not 
+ *  within range anymore. This will be used to calculate the distance of the target from the sensor
+ */
+float calculateDistance(int val){
+  while(val==1){
+    distance=distance-.5;
+    sensor.DetRangeCfg(0, distance);
+    delay(2000);
+    val=sensor.readPresenceDetection();}     //detects distance with an accuracy of .5 meters
+  return distance;
+}
+void loop()
+{
+  int detect;
+  detect = sensor.readPresenceDetection();
+  digitalWrite(ledPin,detect);
+  if (detect==1)
+  {
+    Serial.println("Person Detected! Calculating distance...");
+    distance=calculateDistance(detect);
+    Serial.print("Target distance(m): ");
+    Serial.println(distance);
+  }
+  else
+    Serial.println("No person detected");
+  distance=range;
+}
